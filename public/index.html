@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <title>Tweeter Search</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/myScript.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+
+        socket.on("dataFound", function(data) {
+
+            $("#resTweets").remove();
+
+            var newResTweet = $(document.createElement('div')).attr('id', 'resTweets');
+            newResTweet.appendTo("#divTweets");
+
+            for (var i = 0; i < data.statuses.length; i++) {
+                var newTextBoxDiv = $(document.createElement('div')).attr('class', 'panel panel-default');
+                newTextBoxDiv.after().html(
+                    '<div class="panel-heading"><a target="_blank" href="https://twitter.com/'+data.statuses[i].user.screen_name+'">' + data.statuses[i].user.screen_name + '</a></div><div class="panel-body"><p>' + data.statuses[i].text + '</p></div>'
+                );
+                newTextBoxDiv.appendTo("#resTweets");
+            }
+
+            console.log(data);
+        });
+
+        function search(socket) {
+            var keyWord = $("#txtbxSearch").val();
+            socket.emit("keyWord", encodeURI(keyWord));
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="text-center">Twitter Search</h1>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:50px;">
+            <div class="col-md-12">
+                <div class="col-md-10">
+                    <input class="form-control" type="text" placeholder="Search for Tweets ..." name="txtbxSearch" id="txtbxSearch" value="allthework">
+                </div>
+                <div class="col-md-2 ">
+                    <button class="btn btn-primary" onclick="search(socket)">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:50px;">
+            <div class="panel panel-default">
+                <div class="panel-heading">Tweets</div>
+
+                <div class="panel-body" id="divTweets">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
