@@ -1,9 +1,13 @@
-var Twit = require('twit');
-var express = require('express');
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var config = require('./config');
+const Twit = require('twit');
+const config = require('./config');
+
+const express = require('express');
+const app = express();
+
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/public'));
 
@@ -33,7 +37,7 @@ io.sockets.on('connection', function (socket) {
     });
 })
 
-server.listen(3000, () => {
-    console.log("Magic happens on localhost:3000");
+server.listen(port, () => {
+    console.log(`Magic happens on ${port}`);
 });
 
