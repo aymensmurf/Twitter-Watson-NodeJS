@@ -1,15 +1,11 @@
 var Twit = require('twit');
 var express = require('express');
-var app = require('express')();
-var path = require('path');
+var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-
-server.listen(3000, () => console.log("Magic happens on localhost:3000"));
-
-app.use(express.static(path.join(__dirname, 'public')));
-
 var config = require('./config');
+
+app.use(express.static(__dirname + '/public'));
 
 var T = new Twit(config);
 
@@ -31,4 +27,13 @@ io.sockets.on('connection', function (socket) {
             console.log(err);
         }
     });
+    
+    socket.on('getMyTweets', function(data){
+        
+    });
 })
+
+server.listen(3000, () => {
+    console.log("Magic happens on localhost:3000");
+});
+
